@@ -23,9 +23,11 @@ request.interceptors.request.use(
       // 添加请求头
       config.headers.Authorization = `Bearer ${user.token}`
     }
+    // 要返回配置对象，否则请求就停留在这里出不去
     return config
   },
   function(error) {
+    // 如果请求出错了（还没有发出去）会进入这里
     return Promise.reject(error)
   }
 )
