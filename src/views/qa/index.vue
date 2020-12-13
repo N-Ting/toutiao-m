@@ -1,12 +1,10 @@
 <template>
-  <div id="app">
-    <router-view />
-  </div>
+  <div class="qa-container">问答</div>
 </template>
 
 <script>
 export default {
-  name: 'App',
+  name: 'qa',
   data() {
     return {}
   }
