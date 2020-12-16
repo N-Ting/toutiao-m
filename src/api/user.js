@@ -13,7 +13,7 @@ export const login = data => {
     data
   })
 }
-// 发送短信
+// 获取短信验证码
 export const sendSms = mobile => {
   return request({
     method: 'Get',
@@ -36,7 +36,7 @@ export const getUserInfo = () => {
   })
 }
 
-// 获取用户自己的信息
+// 获取用户频道列表
 export const getUserChannels = () => {
   return request({
     method: 'GET',

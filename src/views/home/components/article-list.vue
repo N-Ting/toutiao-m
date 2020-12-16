@@ -104,7 +104,7 @@ export default {
         this.loading = false
       }
     },
-    // 监听下拉事件
+    // 监听下拉刷新事件
     async onRefresh() {
       // console.log(1)
 

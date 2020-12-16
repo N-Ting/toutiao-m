@@ -14,13 +14,7 @@
           v-for="(img, index) in article.cover.images"
           :key="index"
         >
-          <van-image
-            fit="cover"
-            width="100"
-            height="100"
-            :src="img"
-            class="cover-item-img"
-          />
+          <van-image fit="cover" :src="img" class="cover-item-img" />
         </div>
       </div>
       <!-- 底部文字提示 -->
@@ -73,11 +67,11 @@ export default {
     color: #3a3a3a;
   }
   .van-cell__value {
-    // 去除flex
+    //unset表示如果能继承就继承，否则就是默认的，flex不能继承
     flex: unset;
     width: 232px;
     height: 146px;
-    // padding-left: 25px;
+    padding-left: 25px;
   }
   .right-cover {
     width: 232px;
@@ -94,14 +88,14 @@ export default {
     .cover-item {
       flex: 1;
       height: 146px;
-      // 表示最后一个没有
+      //&:选择到父元素本身，not(:last-child)表示不选择最后一个
       &:not(:last-child) {
         padding-right: 4px;
       }
     }
     .cover-item-img {
-      width: 100% !important;
-      height: 146px !important;
+      width: 100%;
+      height: 146px;
     }
   }
 }
