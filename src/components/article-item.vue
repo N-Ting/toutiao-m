@@ -1,6 +1,20 @@
 <template>
   <!-- 子组件通过props可以接受到父组件传过来的数据 -->
-  <van-cell class="article-item">
+  <!-- :to="'/artilce/' + article.art_id" -->
+  <!-- :to="`/artilce/${article.art_id}`" -->
+  <!-- name可以跟query和params一起用 -->
+  <!-- path只能和query用 -->
+  <van-cell
+    class="article-item"
+    :to="{
+      // 根据路由名称跳转
+      name: 'article',
+      // 传递参数，属性名要求是配置路由时路径中指定的名称，path:'/artilce/:articleId'
+      params: {
+        articleId: article.art_id
+      }
+    }"
+  >
     <!-- 标题 -->
     <div slot="title" class="title van-multi-ellipsis--l2">
       {{ article.title }}
@@ -36,10 +50,13 @@
   </van-cell>
 </template>
 <script>
+// import Article from '@/views/article'
 export default {
   name: 'ArticleItem',
   //  组件
-  components: {},
+  components: {
+    // Article
+  },
   // 接受article-list组件传过来的值，
   props: {
     article: {

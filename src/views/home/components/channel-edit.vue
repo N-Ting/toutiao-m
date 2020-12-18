@@ -68,7 +68,7 @@ import { mapState } from 'vuex'
 // 导入本地存储模块
 import { setItem } from '@/utils/storage'
 // 导入lodash
-import _ from 'lodash'
+import { differenceBy } from 'lodash'
 
 export default {
   name: 'ChannelEdit',
@@ -116,7 +116,7 @@ export default {
         return !myChannel
       }) */
       // 通过id将allChannels数组中有的myChannels数组的元素过滤出来，返回的是不包含myChannels数组中的新数组
-      return _.differenceBy(this.allChannels, this.myChannels, 'id')
+      return differenceBy(this.allChannels, this.myChannels, 'id')
     }
   },
   // 监听

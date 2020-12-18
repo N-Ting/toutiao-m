@@ -8,7 +8,7 @@ import store from '@/store'
 // 创建一个axios实例
 const request = axios.create({
   // 基础路径
-  baseURL: 'http://ttapi.research.itcast.cn/'
+  // baseURL: 'http://ttapi.research.itcast.cn/'
 })
 // 请求拦截器
 request.interceptors.request.use(

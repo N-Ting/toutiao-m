@@ -17,14 +17,7 @@ const routes = [
       {
         path: '', //  默认子路由
         name: 'home',
-        component: () => import('@/views/home'),
-        children: [
-          {
-            path: 'serach',
-            name: 'serach',
-            component: () => import('@/views/serach')
-          }
-        ]
+        component: () => import('@/views/home')
       },
       {
         path: 'qa',
@@ -42,6 +35,20 @@ const routes = [
         component: () => import('@/views/my')
       }
     ]
+  },
+  {
+    // 配置搜索路由
+    path: '/search',
+    name: 'search',
+    component: () => import('@/views/search')
+  },
+  {
+    // 配置文章详情路由
+    path: '/article/:articleId',
+    name: 'article',
+    component: () => import('@/views/article'),
+    // 表示通过props传参，把路由参数映射到组件props数据中
+    props: true
   }
 ]
 

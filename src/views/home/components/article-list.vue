@@ -147,6 +147,7 @@ export default {
 .article-list {
   // 百分比是相对于父元素的
   // height: 100%;
+  // 视口单位 vw 和vh,视口单位相对于布局视口
   height: 79vh;
   // 让浏览器决定如何处理内容在垂直方向发生的溢出
   overflow-y: auto;

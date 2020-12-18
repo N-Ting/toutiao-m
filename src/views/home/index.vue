@@ -10,7 +10,7 @@
         type="info"
         slot="title"
         size="small"
-        to="/serach"
+        to="/search"
       >
         搜索
       </van-button>

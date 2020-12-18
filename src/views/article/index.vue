@@ -1,12 +1,18 @@
 <template>
-  <div>搜索页面</div>
+  <div class="article-container">文章列表详情</div>
 </template>
 <script>
 export default {
-  name: 'serach',
+  name: 'Article',
   // 组件
   components: {},
-  props: {},
+  props: {
+    articleId: {
+      // 直接复制地址跳转是字符串，通过文章列表跳转为数字
+      type: [Number, String],
+      required: true
+    }
+  },
   data() {
     return {}
   },
