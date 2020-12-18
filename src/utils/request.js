@@ -4,11 +4,26 @@
 import axios from 'axios'
 // 导入store
 import store from '@/store'
+// 导入json-bigint第三方包
+// json-bigint 会把超出 JS 安全整数范围的数字转为一个 BigNumber 类型的对象，对象数据是它内部的一个算法处理之后的，我们要做的就是在使用的时候转为字符串来使用。
+import jsonBig from 'json-bigint'
 
 // 创建一个axios实例
 const request = axios.create({
   // 基础路径
   // baseURL: 'http://ttapi.research.itcast.cn/'
+  // 通过 Axios 请求得到的数据都是 Axios 处理（JSON.parse）之后的，我们应该在 Axios 执行处理之前手动使用 json-bigint 来解析处理。Axios 提供了自定义处理原始后端返回数据的 API：transformResponse 。
+  transformResponse: [
+    function(data) {
+      try {
+        // 如果转换成功则返回转换的数据结果
+        return jsonBig.parse(data) // 将josn格式的字符串转换为js对象
+      } catch (err) {
+        // 如果转换失败，则包装为统一数据格式并返回
+        return { data }
+      }
+    }
+  ]
 })
 // 请求拦截器
 request.interceptors.request.use(

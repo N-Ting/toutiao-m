@@ -32,7 +32,9 @@ module.exports = {
       },
       // 配置要转换的css属性、
       // *表示所有，所有的属性都转化
-      propList: ['*']
+      propList: ['*'],
+      // 配置不要转换的样式文件资源
+      exclude: 'github-markdown'
     }
   }
 }
