@@ -39,18 +39,25 @@
           </div>
           <van-button
             class="follow-btn"
+            round
+            size="small"
+            v-if="article.is_followed"
+            @click="onFollow"
+            :loading="followLoading"
+            >已关注</van-button
+          >
+          <van-button
+            class="follow-btn"
             type="info"
             color="#3296fa"
             round
             size="small"
             icon="plus"
+            v-else
+            @click="onFollow"
+            :loading="followLoading"
             >关注</van-button
           >
-          <!-- <van-button
-            class="follow-btn"
-            round
-            size="small"
-          >已关注</van-button> -->
         </van-cell>
         <!-- /用户信息 -->
 
@@ -98,6 +105,7 @@
 import { getArticleById } from '@/api/article'
 // 导入ImagePreview
 import { ImagePreview } from 'vant'
+import { addFollow, deleteFollow } from '@/api/user'
 export default {
   name: 'Article',
   // 组件
@@ -118,7 +126,9 @@ export default {
       // 是否显示loading状态，加载中的loading状态
       isLoading: true,
       // 失败的状态码
-      errStatus: 0
+      errStatus: 0,
+      // 控制按钮加载状态
+      followLoading: false
     }
   },
   // 计算属性
@@ -168,9 +178,9 @@ export default {
       this.isLoading = false
     },
     previewImage() {
-      // 获取div中所有的节点
+      // console.log(this.$refs['article-content'])
+      // 获取div中所有的节点,对象中括号可以拿到里面的值
       const articleConent = this.$refs['article-content']
-
       // 获取所有的img节点
       const imgs = articleConent.querySelectorAll('img')
       // console.log(imgs)
@@ -192,6 +202,37 @@ export default {
           })
         }
       })
+    },
+    async onFollow() {
+      // 点击按钮时设置为加载中
+      this.followLoading = true
+      try {
+        // console.log(this.article.is_followed, 1)
+        // 如果是已关注状态
+        if (this.article.is_followed) {
+          // console.log(this.article.aut_id, 123)
+          // 就发送取消关注用户请求
+          await deleteFollow(this.article.aut_id)
+          //   // 将关注状态设置为false
+          //   // this.article.is_followed = false
+        } else {
+          // console.log(45
+          // 未关注状态
+          await addFollow(this.article.aut_id)
+          //   // 将关注状态设置为true
+          // this.article.is_followed = true
+        }
+        this.article.is_followed = !this.article.is_followed
+      } catch (err) {
+        let message = '请求失败，请稍后重试'
+        // 如果有错误响应并且错误响应为400，表示关注了自己
+        if (err.response && err.response.status === 400) {
+          message = '你不能关注你自己'
+        }
+        this.$toast(message)
+      }
+      // 请求发送成功或失败，结束加载
+      this.followLoading = false
     }
   }
 }
