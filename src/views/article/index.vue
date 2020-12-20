@@ -37,7 +37,26 @@
           <div slot="label" class="publish-date">
             {{ article.pubdate | relativeTime }}
           </div>
-          <van-button
+          <!-- 关注封装的组件 -->
+
+          <!-- 模板中的$event是事件参数 -->
+          <!-- 当我们使用子组件的数据既要使用还要修改 -->
+          <!-- 传递props：
+          :is-followed="article.is_followed" -->
+          <!-- 修改：自定义事件
+          @updata-followed="article.is_followed = $event" -->
+          <!-- 简写方式：在组件上使用v-model value="article.is_followed" -->
+          <!-- @input="article.is_followed = $event" -->
+          <!-- 如果需要修改v-model规则名称，可以通过子组件的model来配置修改 -->
+          <!-- 一个组件上只能使用一次v-model
+          如果有多个数据需要类似于v-model的效果，可以使用属性.sync修饰符
+           -->
+          <follow-user
+            class="follow-btn"
+            :user-id="article.aut_id"
+            v-model="article.is_followed"
+          />
+          <!-- <van-button
             class="follow-btn"
             round
             size="small"
@@ -57,7 +76,7 @@
             @click="onFollow"
             :loading="followLoading"
             >关注</van-button
-          >
+          > -->
         </van-cell>
         <!-- /用户信息 -->
 
@@ -68,6 +87,22 @@
           ref="article-content"
         ></div>
         <van-divider>正文结束</van-divider>
+        <!-- 底部区域 -->
+        <div class="article-bottom">
+          <van-button class="comment-btn" type="default" round size="small"
+            >写评论</van-button
+          >
+          <van-icon name="comment-o" info="123" color="#777" />
+          <collect-article
+            v-model="article.is_collected"
+            :articleId="articleId"
+          />
+          <!-- <van-icon color="#777" name="star-o" /> -->
+          <like-article v-model="article.attitude" :articleId="articleId" />
+          <!-- <van-icon color="#777" name="good-job-o" /> -->
+          <van-icon name="share" color="#777777"></van-icon>
+        </div>
+        <!-- /底部区域 -->
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -86,18 +121,6 @@
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
-
-    <!-- 底部区域 -->
-    <div class="article-bottom">
-      <van-button class="comment-btn" type="default" round size="small"
-        >写评论</van-button
-      >
-      <van-icon name="comment-o" info="123" color="#777" />
-      <van-icon color="#777" name="star-o" />
-      <van-icon color="#777" name="good-job-o" />
-      <van-icon name="share" color="#777777"></van-icon>
-    </div>
-    <!-- /底部区域 -->
   </div>
 </template>
 <script>
@@ -105,11 +128,21 @@
 import { getArticleById } from '@/api/article'
 // 导入ImagePreview
 import { ImagePreview } from 'vant'
-import { addFollow, deleteFollow } from '@/api/user'
+import FollowUser from '@/components/follow-user'
+import CollectArticle from '@/components/collect-article'
+import likeArticle from '@/components/like-article'
+
 export default {
   name: 'Article',
   // 组件
-  components: {},
+  components: {
+    // 关注按钮组件
+    FollowUser,
+    // 收藏按钮组件
+    CollectArticle,
+    // 点赞组件
+    likeArticle
+  },
   props: {
     // 这里使用props解耦路由数据，可以直接在这里访问数据
     articleId: {
@@ -126,9 +159,7 @@ export default {
       // 是否显示loading状态，加载中的loading状态
       isLoading: true,
       // 失败的状态码
-      errStatus: 0,
-      // 控制按钮加载状态
-      followLoading: false
+      errStatus: 0
     }
   },
   // 计算属性
@@ -202,37 +233,6 @@ export default {
           })
         }
       })
-    },
-    async onFollow() {
-      // 点击按钮时设置为加载中
-      this.followLoading = true
-      try {
-        // console.log(this.article.is_followed, 1)
-        // 如果是已关注状态
-        if (this.article.is_followed) {
-          // console.log(this.article.aut_id, 123)
-          // 就发送取消关注用户请求
-          await deleteFollow(this.article.aut_id)
-          //   // 将关注状态设置为false
-          //   // this.article.is_followed = false
-        } else {
-          // console.log(45
-          // 未关注状态
-          await addFollow(this.article.aut_id)
-          //   // 将关注状态设置为true
-          // this.article.is_followed = true
-        }
-        this.article.is_followed = !this.article.is_followed
-      } catch (err) {
-        let message = '请求失败，请稍后重试'
-        // 如果有错误响应并且错误响应为400，表示关注了自己
-        if (err.response && err.response.status === 400) {
-          message = '你不能关注你自己'
-        }
-        this.$toast(message)
-      }
-      // 请求发送成功或失败，结束加载
-      this.followLoading = false
     }
   }
 }
