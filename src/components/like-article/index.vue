@@ -1,6 +1,6 @@
 <template>
   <van-icon
-    :color="value === 1 ? 'red' : ''"
+    :color="value === 1 ? '#e5645f' : ''"
     :name="value === 1 ? 'good-job' : 'good-job-o'"
     :loading="loading"
     @click="onlikeArticle"

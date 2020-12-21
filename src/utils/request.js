@@ -11,7 +11,7 @@ import jsonBig from 'json-bigint'
 // 创建一个axios实例
 const request = axios.create({
   // 基础路径
-  baseURL: 'http://ttapi.research.itcast.cn',
+  // baseURL: 'http://ttapi.research.itcast.cn',
   // 通过 Axios 请求得到的数据都是 Axios 处理（JSON.parse）之后的，我们应该在 Axios 执行处理之前手动使用 json-bigint 来解析处理。Axios 提供了自定义处理原始后端返回数据的 API：transformResponse 。
   transformResponse: [
     function(data) {

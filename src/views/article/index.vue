@@ -87,12 +87,22 @@
           ref="article-content"
         ></div>
         <van-divider>正文结束</van-divider>
+        <comment-list
+          :source="articleId"
+          @updata-data="totalCommentCount = $event.total_count"
+          :list="commentList"
+        />
         <!-- 底部区域 -->
         <div class="article-bottom">
-          <van-button class="comment-btn" type="default" round size="small"
+          <van-button
+            class="comment-btn"
+            type="default"
+            round
+            size="small"
+            @click="isCommentshow = true"
             >写评论</van-button
           >
-          <van-icon name="comment-o" info="123" color="#777" />
+          <van-icon name="comment-o" :info="totalCommentCount" color="#777" />
           <collect-article
             v-model="article.is_collected"
             :articleId="articleId"
@@ -103,6 +113,14 @@
           <van-icon name="share" color="#777777"></van-icon>
         </div>
         <!-- /底部区域 -->
+        <!-- 发布评论 -->
+        <van-popup v-model="isCommentshow" position="bottom"
+          ><comment-post
+            :target="article.art_id"
+            @post-success="onPostSuccess"
+          />
+        </van-popup>
+        <!-- /发布评论 -->
       </div>
       <!-- /加载完成-文章详情 -->
 
@@ -131,6 +149,8 @@ import { ImagePreview } from 'vant'
 import FollowUser from '@/components/follow-user'
 import CollectArticle from '@/components/collect-article'
 import likeArticle from '@/components/like-article'
+import CommentList from './component/comment-list'
+import CommentPost from './component/comment-post'
 
 export default {
   name: 'Article',
@@ -141,7 +161,11 @@ export default {
     // 收藏按钮组件
     CollectArticle,
     // 点赞组件
-    likeArticle
+    likeArticle,
+    // 文章评论组件
+    CommentList,
+    // 写评论弹出框
+    CommentPost
   },
   props: {
     // 这里使用props解耦路由数据，可以直接在这里访问数据
@@ -159,7 +183,10 @@ export default {
       // 是否显示loading状态，加载中的loading状态
       isLoading: true,
       // 失败的状态码
-      errStatus: 0
+      errStatus: 0,
+      totalCommentCount: 0,
+      isCommentshow: false,
+      commentList: []
     }
   },
   // 计算属性
@@ -233,6 +260,12 @@ export default {
           })
         }
       })
+    },
+    onPostSuccess(data) {
+      // 关闭弹出层
+      this.isCommentshow = false
+      // 将添加的评论添加到commentList数组的第一个
+      this.commentList.unshift(data.new_obj)
     }
   }
 }

@@ -53,6 +53,6 @@ export const addLikeArticle = target => {
 export const deleteLikeArticle = target => {
   return request({
     method: 'DELETE',
-    url: `/app/v1_0/article/likings/${target}`
+    url: ` /app/v1_0/article/dislikes/${target}`
   })
 }
