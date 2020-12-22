@@ -9,7 +9,9 @@
           <span class="name">{{ userInfo.name }}</span>
         </div>
         <div class="right">
-          <van-button size="mini" type="default" round>编辑资料</van-button>
+          <van-button size="mini" type="default" round to="/user/profile"
+            >编辑资料</van-button
+          >
         </div>
       </div>
       <!-- 粉丝/关注 -->

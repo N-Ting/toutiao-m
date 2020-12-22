@@ -60,3 +60,22 @@ export const deleteFollow = target => {
     url: `/app/v1_0/user/followings/${target}`
   })
 }
+
+// 获取用户个人信息
+// 如果需要获取别的用户的就传参数
+// 获取当前的不需要传参
+export const getUserProfile = params => {
+  return request({
+    method: 'GET',
+    url: '/app/v1_0/user/profile'
+  })
+}
+
+// 修改用户个人信息
+export const updateUserProfile = data => {
+  return request({
+    method: 'PATCH',
+    url: '/app/v1_0/user/profile',
+    data
+  })
+}

@@ -26,6 +26,13 @@ import { addComment } from '@/api/comment'
 export default {
   name: 'CommentPost',
   components: {},
+  inject: {
+    articleId: {
+      type: [Number, String, Object],
+      // 没传就是null
+      defalut: null
+    }
+  },
   props: {
     target: {
       type: [Number, String, Object],
@@ -51,9 +58,10 @@ export default {
       })
       try {
         const { data } = await addComment({
-          target: this.target, // 评论的目标id（评论文章即为文章id，对评论进行回复则为评论id）
+          // 因为是大数字，所以需要自己进行字符串转换
+          target: this.target.toString(), // 评论的目标id（评论文章即为文章id，对评论进行回复则为评论id）
           content: this.message, // 评论内容
-          art_id: null // 文章id，对评论内容发表回复时，需要传递此参数，表明所属文章id。对文章进行评论，不要传此参数。
+          art_id: this.target.toString() ? this.articleId.toString() : null // 文章id，对评论内容发表回复时，需要传递此参数，表明所属文章id。对文章进行评论，不要传此参数。
         })
         console.log(data)
         // 关闭弹出层

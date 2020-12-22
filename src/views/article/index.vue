@@ -91,6 +91,7 @@
           :source="articleId"
           @updata-data="totalCommentCount = $event.total_count"
           :list="commentList"
+          @click-reply="onReplyClick"
         />
         <!-- 底部区域 -->
         <div class="article-bottom">
@@ -139,6 +140,20 @@
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
     </div>
+    <!-- 评论回复 -->
+    <!-- 弹出层是懒渲染的：只有在第一次展示的时候才会渲染里面的内容 -->
+    <van-popup v-model="isReplyshow" position="bottom" style="height:100%">
+      <!-- v-if条件渲染
+            true：渲染元素的节点
+            false：不渲染，也就是组件销毁了
+       -->
+      <comment-reply
+        v-if="isReplyshow"
+        :comment="currentComment"
+        @close="isReplyshow = false"
+      />
+    </van-popup>
+    <!-- /评论回复 -->
   </div>
 </template>
 <script>
@@ -151,6 +166,7 @@ import CollectArticle from '@/components/collect-article'
 import likeArticle from '@/components/like-article'
 import CommentList from './component/comment-list'
 import CommentPost from './component/comment-post'
+import CommentReply from './component/comment-reply'
 
 export default {
   name: 'Article',
@@ -165,7 +181,15 @@ export default {
     // 文章评论组件
     CommentList,
     // 写评论弹出框
-    CommentPost
+    CommentPost,
+    // 回复评论弹出层
+    CommentReply
+  },
+  // 给所有的后代组件提供数据
+  provide: function() {
+    return {
+      articleId: this.articleId
+    }
   },
   props: {
     // 这里使用props解耦路由数据，可以直接在这里访问数据
@@ -185,8 +209,13 @@ export default {
       // 失败的状态码
       errStatus: 0,
       totalCommentCount: 0,
+      // 发布评论弹出框，默认不显示
       isCommentshow: false,
-      commentList: []
+      commentList: [],
+      // 回复评论弹出框，默认不显示
+      isReplyshow: false,
+      // 存储回复评论信息的
+      currentComment: {}
     }
   },
   // 计算属性
@@ -266,6 +295,13 @@ export default {
       this.isCommentshow = false
       // 将添加的评论添加到commentList数组的第一个
       this.commentList.unshift(data.new_obj)
+    },
+    onReplyClick(comment) {
+      // console.log(comment)
+      // 将回复的评论信息赋值给currentComment
+      this.currentComment = comment
+      // 显示回复弹出层
+      this.isReplyshow = true
     }
   }
 }
