@@ -51,7 +51,7 @@
     <van-popup
       v-model="isUserGendershow"
       position="bottom"
-      :style="{ height: '100%' }"
+      :style="{ height: '50%' }"
     >
       <updata-gender
         v-if="isUserGendershow"
@@ -64,7 +64,7 @@
     <van-popup
       v-model="isUserBirthdayshow"
       position="bottom"
-      :style="{ height: '100%' }"
+      :style="{ height: '50%' }"
     >
       <updata-birthday
         v-if="isUserBirthdayshow"
@@ -81,9 +81,9 @@
     >
       <updata-avatar
         v-if="isUserAvatarshow"
-        v-model="user.birthday"
         @close="isUserAvatarshow = false"
         :img="imgUrl"
+        @update-photo="user.photo = $event"
       />
     </van-popup>
     <!-- /编辑头像弹出框 -->
@@ -117,9 +117,8 @@ export default {
       isUserBirthdayshow: false,
       // 控制是否显示头像弹出层
       isUserAvatarshow: false,
-      imgUrl: {
-        type: [String, Object]
-      }
+      // 图片初始化路径
+      imgUrl: null
     }
   },
   // 计算属性
@@ -147,11 +146,13 @@ export default {
       // console.log(this.$refs.inputRef.files)
       // 可以通过引用对象获取到选择文件的信息,下标为0的表示当前选择的文件
       const file = this.$refs.inputRef.files[0]
-      // 创建一个blob数据
+      // 基于文件对象创建一个blob数据
       this.imgUrl = window.URL.createObjectURL(file)
       // console.log(imgUrl)
       // 显示弹出层
       this.isUserAvatarshow = true
+      // 每次关闭弹层, 把它的value清空,因为选择同一个文件,没有触发change事件
+      this.$refs.inputRef.value = ''
     }
   }
 }

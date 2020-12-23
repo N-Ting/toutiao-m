@@ -123,7 +123,14 @@ export default {
         // 利用commit触发mutations里的函数
         this.$store.commit('setUser', res.data.data)
         this.$toast.success('登录成功')
-        this.$router.back()
+        // this.$router.back()
+        // 从哪里来的登录后跳转回原来的位置
+        // 携带一个你来自哪里的参数。redirect这个参数名可以身边写
+        // 判断是否有this.$router.query.redirect
+        // 有的话跳转回redirect，没有就跳转到首页
+        // 登录成功后将layout缓存抹掉
+        this.$store.commit('removeCachePage', 'layout')
+        this.$router.push(this.$route.query.redirect || '/')
       } catch (err) {
         if (err.response.status === 400) {
           console.log('登录失败', err)

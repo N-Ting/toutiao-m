@@ -1,5 +1,5 @@
 <template>
-  <div class="article-list">
+  <div class="article-list" ref="article-list">
     <!-- success-duration成功提示的时间 refresh下拉刷新时会触发的函数-->
     <van-pull-refresh
       v-model="isRefreshLoading"
@@ -37,6 +37,8 @@
 // 导入获取频道文章列表的方法
 import { getArticles } from '@/api/article'
 import ArticleItem from '@/components/article-item'
+// 导入防抖方法
+import { debounce } from 'lodash'
 
 export default {
   name: 'ArticleList',
@@ -61,7 +63,8 @@ export default {
       timestamp: null, //  请求获取下一页的时间戳
       error: false, //  控制失败的提示状态
       isRefreshLoading: false, //  控制下拉刷新的loading状态
-      refreshSuccessText: '刷新成功' //  下拉刷新成功提示文本
+      refreshSuccessText: '刷新成功', //  下拉刷新成功提示文本
+      scrollTop: 0 // 滚动位置
     }
   },
   methods: {
@@ -139,6 +142,25 @@ export default {
         this.refreshSuccessText = '刷新失败'
       }
     }
+  },
+  mounted() {
+    // 为了点击文章详情返回时，还是之前滚动到的位置
+    // 滚动的时候需要记录位置
+    const articleList = this.$refs['article-list']
+    articleList.onscroll = debounce(() => {
+      // console.log(articleList.scrollTop)
+      this.scrollTop = articleList.scrollTop
+    }, 100)
+    // 因为mounted只有组件第一次渲染完毕后才会触发
+    // 所以不能再这里把记录的滚动位置赋值给article-list这个组件的scrollTop
+  },
+  activated() {
+    // 从缓存当中激活的时候触发
+    // 当组件从缓存列表中激活的时候，把记录的滚动的位置给article-list这个组件的scrollTop
+    this.$refs['article-list'].scrollTop = this.scrollTop
+  },
+  deactivated() {
+    // 从缓存当中失活的时候触发
   }
 }
 </script>

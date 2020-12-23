@@ -51,15 +51,22 @@ export default {
     async onClickRight() {
       this.$toast.loading({
         message: '保存中....',
-        forbidClick: true,
-        duration: 0
+        forbidClick: true, // 禁止背景点击
+        duration: 0 // 持续展示
       })
+
       try {
+        // 如果为空
+        if (!this.message.length) {
+          this.$toast('昵称不能为空!')
+          return
+        }
         await updateUserProfile({
           name: this.message // 更新的昵称
         })
         //  通过自定义事件将修改后的昵称传给父组件
         this.$emit('input', this.message)
+        // 通过自定义事件，告诉父组件关闭弹窗
         this.$emit('closePost')
         this.$toast.success('更新数据成功！')
       } catch (err) {

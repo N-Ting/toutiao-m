@@ -26,7 +26,8 @@ export default {
   },
   data() {
     return {
-      columns: [0, 1]
+      columns: ['男', '女'],
+      gender: this.value
     }
   },
   // 计算属性
@@ -42,6 +43,7 @@ export default {
       console.log(index)
       // 将当前选中的索引赋值给gender
       this.gender = index
+      console.log(this.gender)
     },
     // 当点击确认按钮时
     async onConfirm() {
@@ -55,7 +57,9 @@ export default {
           gender: this.gender
         })
         // console.log(data)
+        // 通过自定义事件，将修改后的值传给父组件
         this.$emit('input', this.gender)
+        // 通过自定义事件告诉父组件关闭弹窗
         this.$emit('close')
         this.$toast.success('更新数据成功!')
       } catch (err) {

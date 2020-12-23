@@ -1,5 +1,11 @@
 <template>
   <div updata-birthday>
+    <!-- currentDate双向绑定日期选择器
+       设置日期选择器的默认值
+       同步日期选择器选择的日期
+       minDate:可选的最小日期
+       maxDate:可选的最大日期
+     -->
     <van-datetime-picker
       v-model="currentDate"
       type="date"
@@ -28,7 +34,7 @@ export default {
     return {
       minDate: new Date(1900, 0, 1),
       maxDate: new Date(),
-      currentDate: new Date(this.value)
+      currentDate: new Date(this.value) // 基于this.value创建一个日期对象
     }
   },
   // 计算属性

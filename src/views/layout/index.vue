@@ -1,6 +1,9 @@
 <template>
   <div class="layout-container">
-    <router-view></router-view>
+    <!-- 二级路由 -->
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
     <!-- 标签导航 -->
     <van-tabbar class="layout-tabbar" v-model="active" route>
       <van-tabbar-item to="/">
@@ -31,6 +34,9 @@ export default {
     return {
       active: 0
     }
+  },
+  mounted() {
+    this.$store.commit('addCachePages', 'layout')
   }
 }
 </script>
